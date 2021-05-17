@@ -63,12 +63,15 @@ class IntSet
 end
 
 class ResizingIntSet
-  attr_accessor :count, :size
+  attr_accessor :count, :store
 
   def initialize(num_buckets = 20)
-    @size = num_buckets
     @store = Array.new(num_buckets) { Array.new }
     @count = 0
+  end
+
+  def size
+    @store.length
   end
 
   def insert(num)
@@ -102,8 +105,17 @@ class ResizingIntSet
   end
 
   def resize!
-    @store += Array.new(size) {Array.new}
+    new_array = ResizingIntSet.new(size * 2)
+    
+    @store.each do |row|
+      row.each do |num|
+        new_array.insert(num)
+      end
+    end
+    @store = new_array.store
   end
+
+
 end
 
 set = ResizingIntSet.new(5)

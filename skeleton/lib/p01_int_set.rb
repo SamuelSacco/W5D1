@@ -48,10 +48,7 @@ class IntSet
   end
 
   def include?(num)
-    @store.flatten.each do |el|
-      return true if el == num
-    end
-    return false
+    self[num].include?(num)
   end
 
   private
@@ -66,26 +63,38 @@ class IntSet
 end
 
 class ResizingIntSet
-  attr_reader :count
+  attr_accessor :count, :size
 
   def initialize(num_buckets = 20)
+    @size = num_buckets
     @store = Array.new(num_buckets) { Array.new }
     @count = 0
   end
 
   def insert(num)
+    
+    unless self[num].include?(num)
+      resize!
+      self[num] << num 
+      self.count += 1
+    end
+
   end
 
   def remove(num)
+    return unless self[num].include?(num)
+    self[num].delete(num)
+    self.count -= 1
   end
 
   def include?(num)
+    self[num].include?(num)
   end
 
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    @store[num % @store.length]
   end
 
   def num_buckets
@@ -93,6 +102,9 @@ class ResizingIntSet
   end
 
   def resize!
+    if size <= count
+      @store += Array.new(size) {Array.new}
+    end
   end
 end
 

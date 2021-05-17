@@ -75,7 +75,6 @@ class ResizingIntSet
     resize! if size == count + 1
 
     unless self[num].include?(num)
-      # resize! if size <= count
       self[num] << num 
       self.count += 1
     end
@@ -104,15 +103,6 @@ class ResizingIntSet
 
   def resize!
     @store += Array.new(size) {Array.new}
-    @size = @store.length
-      @store.each do |row|
-        unless row.empty?
-          row.each do |num|
-            insert(num)
-            remove(num)
-          end
-        end
-      end
   end
 end
 

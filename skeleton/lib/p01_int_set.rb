@@ -1,25 +1,30 @@
 class MaxIntSet
   def initialize(max)
     @max = max
-    @store = Array.new(max, false)
+    # @store = Array.new(max, false)
+    @store = (0..max).to_a
+    (0..@store.length).each do |i|
+      @store[i] = false
+    end
   end
 
-  def out_of_bounds(num)
-    raise 'out of bounds' if !num.between?(0, @max)
-  end
+  # [false, false, true, true, false]
+  # [0, 1, 2, 3, 4] = arr
+  # arr[5] = nil
+  
 
   def insert(num)
-    p num
-    self.out_of_bounds(num)
+    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
     @store[num] = true
   end
 
   def remove(num)
-    self.out_of_bounds(num)
+    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
+
   end
 
   def include?(num)
-    self.out_of_bounds(num)
+    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
     return @store[num]
   end
 
@@ -90,4 +95,3 @@ class ResizingIntSet
 end
 
 n = MaxIntSet.new(5)
-n.out_of_bounds(49)

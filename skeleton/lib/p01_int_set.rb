@@ -72,9 +72,10 @@ class ResizingIntSet
   end
 
   def insert(num)
-    
+    resize! if size == count + 1
+
     unless self[num].include?(num)
-      resize!
+      # resize! if size <= count
       self[num] << num 
       self.count += 1
     end
@@ -102,10 +103,25 @@ class ResizingIntSet
   end
 
   def resize!
-    if size <= count
-      @store += Array.new(size) {Array.new}
-    end
+    @store += Array.new(size) {Array.new}
+    @size = @store.length
+      @store.each do |row|
+        unless row.empty?
+          row.each do |num|
+            insert(num)
+            remove(num)
+          end
+        end
+      end
   end
 end
 
-n = MaxIntSet.new(5)
+set = ResizingIntSet.new(5)
+set.insert(0)
+set.insert(1)
+set.insert(2)
+set.insert(3)
+set.insert(4)
+set.insert(5)
+set.insert(6)
+p set

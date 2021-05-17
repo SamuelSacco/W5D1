@@ -1,36 +1,30 @@
 class MaxIntSet
+  attr_reader :store
+
   def initialize(max)
     @max = max
-    # @store = Array.new(max, false)
-    @store = (0..max).to_a
-    (0..@store.length).each do |i|
-      @store[i] = false
-    end
+    @store = Array.new(max, false)
   end
 
-  # [false, false, true, true, false]
-  # [0, 1, 2, 3, 4] = arr
-  # arr[5] = nil
-  
-
   def insert(num)
-    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
+    raise 'Out of bounds' if !is_valid?(num)  
     @store[num] = true
   end
 
   def remove(num)
-    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
-
+    raise 'Out of bounds' if !is_valid?(num)
+    @store[num] = false
   end
 
   def include?(num)
-    raise 'Out of bounds' if !(0..@max).to_a.include?(num)  
+    raise 'Out of bounds' if !is_valid?(num)  
     return @store[num]
   end
 
   private
 
   def is_valid?(num)
+    (0..@max).to_a.include?(num)  
   end
 
   def validate!(num)
@@ -39,23 +33,31 @@ end
 
 
 class IntSet
+  attr_reader :store, :size
   def initialize(num_buckets = 20)
+    @size = num_buckets
     @store = Array.new(num_buckets) { Array.new }
   end
 
   def insert(num)
+    self[num] << num
   end
 
   def remove(num)
+    self[num].delete(num)
   end
 
   def include?(num)
+    @store.flatten.each do |el|
+      return true if el == num
+    end
+    return false
   end
 
   private
 
   def [](num)
-    # optional but useful; return the bucket corresponding to `num`
+    @store[num % @size]
   end
 
   def num_buckets
